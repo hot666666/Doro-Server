@@ -50,7 +50,7 @@ public class SecurityConfig {
                         "/check/phone",
                         "/find/account",
                         "/change/password",
-                        "/apply/education/**",
+                        "/education-application/**",
                         "/",
                         "/swagger-ui.html",
                         "/v3/api-docs/**",

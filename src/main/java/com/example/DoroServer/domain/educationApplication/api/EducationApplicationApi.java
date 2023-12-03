@@ -31,7 +31,7 @@ import com.example.DoroServer.domain.educationApplication.service.EducationAppli
 
 @Api(tags = "교육 신청 ✍️")
 @RestController
-@RequestMapping("/apply/education")
+@RequestMapping("/education-application")
 @RequiredArgsConstructor
 public class EducationApplicationApi {
 
