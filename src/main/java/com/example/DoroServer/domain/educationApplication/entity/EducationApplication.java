@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.example.DoroServer.domain.base.BaseEntity;
 import com.example.DoroServer.domain.educationApplicationClassGroup.entity.ClassGroup;
 
 import lombok.AccessLevel;
@@ -24,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class EducationApplication { // extends BaseEntity
+public class EducationApplication extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.example.DoroServer.domain.base.BaseEntity;
 import com.example.DoroServer.domain.educationApplication.entity.EducationApplication;
 
 import lombok.AccessLevel;
@@ -25,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class ClassGroup { // extends BaseEntity
+public class ClassGroup extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
