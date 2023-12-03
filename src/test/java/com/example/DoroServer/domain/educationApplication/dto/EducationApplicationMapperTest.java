@@ -3,116 +3,39 @@ package com.example.DoroServer.domain.educationApplication.dto;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
-import com.example.DoroServer.domain.educationApplication.entity.EducationApplication;
+import static com.example.DoroServer.domain.educationApplication.EducationApplicationTestSetup.getEducationApplication;
+import static com.example.DoroServer.domain.educationApplication.EducationApplicationTestSetup.getEducationApplicationReq;
+import static com.example.DoroServer.domain.educationApplication.EducationApplicationTestSetup.getEducationApplicationRes;
+import static com.example.DoroServer.domain.educationApplication.EducationApplicationTestSetup.getEducationApplicationResList;
+import static com.example.DoroServer.domain.educationApplication.EducationApplicationTestSetup.getEducationApplications;
+import static com.example.DoroServer.domain.educationApplication.EducationApplicationTestSetup.getUpdateEducationApplication;
+import static com.example.DoroServer.domain.educationApplication.EducationApplicationTestSetup.getUpdateEducationApplicationReq;
+import static com.example.DoroServer.domain.educationApplication.EducationApplicationTestSetup.UPDATED_NAME;
+import static com.example.DoroServer.domain.educationApplication.EducationApplicationTestSetup.UPDATED_POSITION;
+import static com.example.DoroServer.domain.educationApplication.EducationApplicationTestSetup.UPDATED_OVERALL_REMARK;
 
-@SpringBootTest
-@Disabled
+import com.example.DoroServer.domain.educationApplication.entity.EducationApplication;
+import com.example.DoroServer.global.config.ModelMapperConfig;
+
+@SpringBootTest(classes = { EducationApplicationMapper.class, ModelMapperConfig.class })
 public class EducationApplicationMapperTest {
 
     @Autowired
     private EducationApplicationMapper mapper;
 
-    private EducationApplicationReq setUpEducationApplicationReq() {
-        return EducationApplicationReq.builder()
-                .name("홍길동")
-                .phoneNumber("010-1234-5678")
-                .institutionName("냉장고등학교")
-                .position("교장선생님")
-                .email("gildong@naver.com")
-                .studentRank("고등학교 1학년")
-                .numberOfStudents(200)
-                .budget(1000000)
-                .overallRemark("특이사항 없음")
-                .build();
-    }
-
-    private EducationApplicationReq setUpUpdateEducationApplicationReq() {
-        return EducationApplicationReq.builder()
-                .name("고길동") // update
-                .phoneNumber("010-1234-5678")
-                .institutionName("냉장고등학교")
-                .position("교감선생님") // update
-                .email("gildong@naver.com")
-                .studentRank("고등학교 1학년")
-                .numberOfStudents(200)
-                .budget(1000000)
-                .overallRemark("둘리 조심") // update
-                .build();
-    }
-
-    private EducationApplication setUpEducationApplication() {
-        return EducationApplication.builder()
-                .id(1L)
-                .name("홍길동")
-                .phoneNumber("010-1234-5678")
-                .institutionName("냉장고등학교")
-                .position("교장선생님")
-                .email("gildong@naver.com")
-                .studentRank("고등학교 1학년")
-                .numberOfStudents(200)
-                .budget(1000000)
-                .overallRemark("특이사항 없음")
-                .build();
-    }
-
-    private EducationApplication setUpUpdateEducationApplication() {
-        return EducationApplication.builder()
-                .id(1L)
-                .name("고길동") // update
-                .phoneNumber("010-1234-5678")
-                .institutionName("냉장고등학교")
-                .position("교감선생님") // update
-                .email("gildong@naver.com")
-                .studentRank("고등학교 1학년")
-                .numberOfStudents(200)
-                .budget(1000000)
-                .overallRemark("둘리 조심") // update
-                .build();
-    }
-
-    private EducationApplicationRes setUpEducationApplicationRes() {
-        return EducationApplicationRes.builder()
-                .id(1L)
-                .name("홍길동")
-                .phoneNumber("010-1234-5678")
-                .institutionName("냉장고등학교")
-                .position("교장선생님")
-                .email("gildong@naver.com")
-                .studentRank("고등학교 1학년")
-                .numberOfStudents(200)
-                .budget(1000000)
-                .overallRemark("특이사항 없음")
-                .classGroups(new ArrayList<>())
-                .build();
-    }
-
-    private List<EducationApplication> setUpEducationApplications() {
-        List<EducationApplication> educationApplications = new ArrayList<>();
-        educationApplications.add(setUpEducationApplication());
-        return educationApplications;
-    }
-
-    private List<EducationApplicationRes> setUpEducationApplicationResList() {
-        List<EducationApplicationRes> educationApplicationResList = new ArrayList<>();
-        educationApplicationResList.add(setUpEducationApplicationRes());
-        return educationApplicationResList;
-    }
-
     @DisplayName("교육 신청 toEntity Mapper 테스트")
     @Test
     void testToEntity() {
         // given
-        EducationApplicationReq applicationReq = setUpEducationApplicationReq();
-        EducationApplication educationApplication = setUpEducationApplication();
+        EducationApplicationReq applicationReq = getEducationApplicationReq();
+        EducationApplication educationApplication = getEducationApplication();
 
         // when
         EducationApplication result = mapper.toEntity(applicationReq);
@@ -135,9 +58,9 @@ public class EducationApplicationMapperTest {
     @Test
     void testToEntityWithDestination() {
         // given
-        EducationApplicationReq updateApplicationReq = setUpUpdateEducationApplicationReq();
-        EducationApplication educationApplication = setUpEducationApplication();
-        EducationApplication updateEducationApplication = setUpUpdateEducationApplication();
+        EducationApplicationReq updateApplicationReq = getUpdateEducationApplicationReq();
+        EducationApplication educationApplication = getEducationApplication();
+        EducationApplication updateEducationApplication = getUpdateEducationApplication();
 
         // when
         EducationApplication result = mapper.toEntity(updateApplicationReq, educationApplication);
@@ -154,18 +77,17 @@ public class EducationApplicationMapperTest {
                 e.printStackTrace();
             }
         }
-        // 업데이트 된 내용이 맞는지 assertThat으로 확인
-        assertThat(result.getName()).isEqualTo("고길동");
-        assertThat(result.getPosition()).isEqualTo("교감선생님");
-        assertThat(result.getOverallRemark()).isEqualTo("둘리 조심");
+        assertThat(result.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(result.getPosition()).isEqualTo(UPDATED_POSITION);
+        assertThat(result.getOverallRemark()).isEqualTo(UPDATED_OVERALL_REMARK);
     }
 
     @DisplayName("교육 신청 toDTO Mapper 테스트")
     @Test
     void testToDTO() {
         // given
-        EducationApplication educationApplication = setUpEducationApplication();
-        EducationApplicationRes educationApplicationRes = setUpEducationApplicationRes();
+        EducationApplication educationApplication = getEducationApplication();
+        EducationApplicationRes educationApplicationRes = getEducationApplicationRes();
 
         // when
         EducationApplicationRes result = mapper.toDTO(educationApplication);
@@ -186,8 +108,8 @@ public class EducationApplicationMapperTest {
     @Test
     void testToDTOList() {
         // given
-        List<EducationApplication> educationApplications = setUpEducationApplications();
-        List<EducationApplicationRes> educationApplicationResList = setUpEducationApplicationResList();
+        List<EducationApplication> educationApplications = getEducationApplications();
+        List<EducationApplicationRes> educationApplicationResList = getEducationApplicationResList();
 
         // when
         List<EducationApplicationRes> result = mapper.toDTO(educationApplications);
