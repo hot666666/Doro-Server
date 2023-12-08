@@ -50,7 +50,7 @@ public class CreateLectureReq {
     @NotBlank
     private String staff; // 강의 스태프 수
     @NotBlank
-    private String mainPayment; //강사 급여
+    private String mainPayment; // 강사 급여
     @NotBlank
     private String subPayment;
     @NotBlank
@@ -61,6 +61,8 @@ public class CreateLectureReq {
     private String time; // 시간
     @NotBlank
     private String remark;
+
+    @Builder.Default
     @NotNull
     private List<LocalDate> lectureDates = new ArrayList<>(); // 강의 날짜
     @NotNull
