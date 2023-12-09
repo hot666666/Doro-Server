@@ -1,80 +1,64 @@
-package com.example.DoroServer.domain.lectureContent.service;
-
-import com.example.DoroServer.domain.lectureContent.dto.LectureContentMapper;
-import com.example.DoroServer.domain.lectureContent.dto.CreateLectureContentReq;
-import com.example.DoroServer.domain.lectureContent.dto.LectureContentRes;
-import com.example.DoroServer.domain.lectureContent.dto.UpdateLectureContentReq;
-import com.example.DoroServer.domain.lectureContent.entity.LectureContent;
-import com.example.DoroServer.domain.lectureContent.repository.LectureContentRepository;
-import com.example.DoroServer.domain.lectureContentImage.entity.LectureContentImage;
-import com.example.DoroServer.global.exception.BaseException;
-import com.example.DoroServer.global.exception.Code;
-import com.example.DoroServer.global.s3.AwsS3ServiceImpl;
+package com.example.DoroServer.domain.lectureContentImage.service;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.modelmapper.ModelMapper;
+
+import javax.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.DoroServer.domain.lectureContent.entity.LectureContent;
+import com.example.DoroServer.domain.lectureContent.repository.LectureContentRepository;
+import com.example.DoroServer.domain.lectureContentImage.dto.LectureContentImageMapper;
+import com.example.DoroServer.domain.lectureContentImage.dto.LectureContentImageReq;
+import com.example.DoroServer.domain.lectureContentImage.dto.LectureContentImageRes;
+import com.example.DoroServer.domain.lectureContentImage.entity.LectureContentImage;
+import com.example.DoroServer.domain.lectureContentImage.repository.LectureContentImageRepository;
+import com.example.DoroServer.global.exception.BaseException;
+import com.example.DoroServer.global.exception.Code;
+import com.example.DoroServer.global.s3.AwsS3ServiceImpl;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class LectureContentService {
-
+public class LectureContentImageService {
     private final AwsS3ServiceImpl awsS3Service;
+    private final LectureContentImageRepository lectureContentImageRepository;
     private final LectureContentRepository lectureContentRepository;
-    private final LectureContentMapper lectureContentMapper;
-    private final ModelMapper modelMapper;
+    private final LectureContentImageMapper lectureContentImageMapper;
 
-    /* 서비스 코드 */
+    public List<LectureContentImageRes> addLectureContentImages(Long id,
+            LectureContentImageReq lectureContentImageReq) {
+        LectureContent lectureContent = findLectureContentById(id);
 
-    public List<LectureContentRes> findAllLectureContents() {
-        List<LectureContent> lectureContentList = lectureContentRepository.findAll();
+        validateDtoFiles(lectureContentImageReq.getFiles());
 
-        return lectureContentMapper.toLectureContentResList(lectureContentList);
-    }
-
-    public LectureContentRes createLectureContent(CreateLectureContentReq lectureContentReq) {
-        validateDtoFiles(lectureContentReq.getFiles());
-
-        LectureContent lectureContent = modelMapper.map(lectureContentReq, LectureContent.class);
-
-        List<String> uploadedUrls = uploadFilesAndGetUrls(lectureContentReq.getFiles());
+        List<String> uploadedUrls = uploadFilesAndGetUrls(lectureContentImageReq.getFiles());
 
         List<LectureContentImage> lectureContentImages = createLectureContentImagesWith(uploadedUrls);
+        lectureContentImages = lectureContentImageRepository.saveAll(lectureContentImages);
         lectureContent.getImages().addAll(lectureContentImages);
-        LectureContent savedLectureContent = lectureContentRepository.save(lectureContent);
-
-        return lectureContentMapper.toLectureContentRes(savedLectureContent);
+        return lectureContentImageMapper.toLectureContentImageResList(lectureContentImages);
     }
 
-    public LectureContentRes updateLectureContent(Long id, UpdateLectureContentReq updateLectureContentReq) {
-        LectureContent lectureContent = findLectureContentById(id);
+    public void deleteLectureContentImage(Long contentId, Long imageId) {
+        LectureContent lectureContent = findLectureContentById(contentId);
+        LectureContentImage lectureContentImage = getLectureContentImage(imageId, lectureContent);
 
-        modelMapper.map(updateLectureContentReq, lectureContent); // 필드있고없고차이 MapStruct와 비교
-
-        LectureContent updatedLectureContent = lectureContentRepository.save(lectureContent);
-
-        return lectureContentMapper.toLectureContentRes(updatedLectureContent);
-    }
-
-    public void deleteLectureContent(Long id) {
-        LectureContent lectureContent = findLectureContentById(id);
-
-        lectureContent.getImages().forEach(this::deleteS3Image);
-
-        lectureContentRepository.delete(lectureContent);
+        deleteS3Image(lectureContentImage);
+        lectureContent.getImages().remove(lectureContentImage);
+        lectureContentImageRepository.delete(lectureContentImage);
     }
 
     /* 서비스 코드에서 사용되는 메서드 */
 
     void validateDtoFiles(MultipartFile[] files) {
-        if (files == null) {
-            // Multipart가 한 개라도 배열에 넣어서 요청해야함
+        // MultipartFile이 한 개라도 배열에 넣어서 요청해야함
+        if (files == null || files.length == 0) {
             throw new BaseException(Code.JSON_SYNTAX_ERROR);
         }
         if (files.length > 100) {
@@ -85,6 +69,14 @@ public class LectureContentService {
                 throw new BaseException(Code.LECTURE_CONTENT_IMAGE_SIZE_OVER);
             }
         }
+    }
+
+    private LectureContentImage getLectureContentImage(Long imageId, LectureContent lectureContent) {
+        LectureContentImage lectureContentImage = lectureContent.getImages().stream()
+                .filter(image -> image.getId().equals(imageId))
+                .findFirst()
+                .orElseThrow(() -> new BaseException(Code.LECTURE_CONTENT_IMAGE_NOT_FOUND));
+        return lectureContentImage;
     }
 
     LectureContent findLectureContentById(Long id) {
