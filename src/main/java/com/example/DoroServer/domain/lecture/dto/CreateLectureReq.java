@@ -3,7 +3,6 @@ package com.example.DoroServer.domain.lecture.dto;
 import com.example.DoroServer.domain.lecture.entity.Lecture;
 import com.example.DoroServer.domain.lecture.entity.LectureDate;
 import com.example.DoroServer.domain.lecture.entity.LectureStatus;
-import com.example.DoroServer.domain.lectureContent.dto.LectureContentDto;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
