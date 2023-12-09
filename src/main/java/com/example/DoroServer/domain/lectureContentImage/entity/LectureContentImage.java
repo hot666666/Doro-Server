@@ -22,4 +22,8 @@ public class LectureContentImage {
 
     private String url;
 
+    public LectureContentImage(String url) {
+        this.url = url;
+    }
+
 }
