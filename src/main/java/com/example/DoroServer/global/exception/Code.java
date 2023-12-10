@@ -41,7 +41,7 @@ public enum Code {
         LECTURE_NOT_FOUND(HttpStatus.BAD_REQUEST, "LEC001", "강의가 존재하지 않습니다."),
         LECTURE_CONTENT_NOT_FOUND(HttpStatus.BAD_REQUEST, "LEC002", "강의 컨텐츠가 존재하지 않습니다."),
         LECTURE_CONTENT_IMAGE_SIZE_OVER(HttpStatus.BAD_REQUEST, "LEC003", "이미지 사이즈가 10MB를 초과했습니다."),
-        LECTURE_CONTENT_IMAGE_COUNT_OVER(HttpStatus.BAD_REQUEST, "LEC004", "이미지는 100장 이하로 업로드해주세요."),
+        LECTURE_CONTENT_INVAILD_IMAGE_COUNT(HttpStatus.BAD_REQUEST, "LEC004", "이미지는 1장 이상 100장 이하로 업로드해주세요."),
         LECTURE_CONTENT_IMAGE_NOT_FOUND(HttpStatus.BAD_REQUEST, "LEC005", "이미지가 존재하지 않습니다."),
 
         // 신청 강사 관련 오류
