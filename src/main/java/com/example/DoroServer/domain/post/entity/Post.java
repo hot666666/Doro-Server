@@ -1,6 +1,5 @@
 package com.example.DoroServer.domain.post.entity;
 
-
 import com.example.DoroServer.domain.base.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,13 +23,11 @@ public class Post extends BaseEntity {
     @Column(name = "post_id")
     private Long id; // PK
 
+    private String password;
+
     private String title;
 
     private String content;
-
-    private String password;
-
-    private boolean isLocked;
 
     private String ownerName;
 
@@ -42,10 +39,11 @@ public class Post extends BaseEntity {
 
     private String answer;
 
-    private boolean isAnswered;
+    @Builder.Default
+    private boolean isAnswered = false;
 
-    public void enrollAnswer(String answer){
-        this.answer=answer;
-        this.isAnswered=true;
+    public void enrollAnswer(String answer) {
+        this.answer = answer;
+        this.isAnswered = true;
     }
 }
