@@ -1,27 +1,15 @@
 package com.example.DoroServer.domain.post.dto;
 
-
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
-@ToString
 @Getter
-@NoArgsConstructor
+@Setter
 @Builder
-@AllArgsConstructor
 public class FindAllPostRes {
+    private Long total;
 
-    private Long id;
-
-    private String title;
-
-    private boolean isLocked;
-
-    private boolean isAnswered;
-
-    private String ownerName;
-
-    private LocalDateTime createdAt;
+    private List<PostDto> posts;
 
 }

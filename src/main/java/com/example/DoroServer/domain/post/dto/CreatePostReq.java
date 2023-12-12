@@ -1,10 +1,8 @@
 package com.example.DoroServer.domain.post.dto;
 
-
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @ToString
 @Getter
@@ -20,9 +18,6 @@ public class CreatePostReq {
 
     @NotBlank
     private String password;
-
-    @NotNull
-    private boolean isLocked;
 
     @NotBlank
     private String ownerName;

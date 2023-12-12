@@ -1,15 +1,12 @@
 package com.example.DoroServer.domain.post.dto;
 
-
 import lombok.*;
 
-@ToString
 @Getter
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class FindPostRes {
-
+public class PostDto {
     private Long id; // PK
 
     private String title;
@@ -19,6 +16,8 @@ public class FindPostRes {
     private String ownerName;
 
     private String institution;
+
+    private String phoneNumber;
 
     private String email;
 
