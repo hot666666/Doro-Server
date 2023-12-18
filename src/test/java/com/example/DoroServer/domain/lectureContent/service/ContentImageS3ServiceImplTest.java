@@ -1,22 +1,15 @@
 package com.example.DoroServer.domain.lectureContent.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.calls;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Arrays;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -73,7 +66,7 @@ public class ContentImageS3ServiceImplTest {
         CreateLectureContentReq lectureContentReq = setUpLectureContentReq0();
 
         // when & then
-        assertThrows(BaseException.class, () -> contentImageS3Service.validate(lectureContentReq.getFiles()));
+        assertThrows(BaseException.class, () -> lectureContentReq.validateFiles());
 
     }
 

@@ -5,6 +5,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.DoroServer.global.s3.MultipartFileUtils;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,5 +34,9 @@ public class CreateLectureContentReq {
 
     @NotNull
     private MultipartFile[] files; // 강의 컨텐츠 이미지 파일들
+
+    public void validateFiles() {
+        MultipartFileUtils.validateMultipartFiles(this.files);
+    }
 
 }

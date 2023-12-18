@@ -31,6 +31,7 @@ public class LectureContentImageService {
 
     public List<LectureContentImageRes> addLectureContentImages(Long id,
             LectureContentImageReq lectureContentImageReq) {
+        lectureContentImageReq.validateFiles();
         LectureContent lectureContent = findLectureContentById(id);
 
         // lectureContentReq의 files를 S3에 업로드 후, 업로드된 파일들의 URL을 LectureContentImage로 변환
